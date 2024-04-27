@@ -24,12 +24,10 @@ jobs:
 
             - name: Create release
               id: create_release
-              uses: actions/create-release@v1
+              uses: softprops/action-gh-release@v2
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                  tag_name: v${{ github.run_number }}
-                  release_name: Release ${{ github.run_number }}
                   body: |
                       $(git log --format=%B --reverse)
                   draft: false
