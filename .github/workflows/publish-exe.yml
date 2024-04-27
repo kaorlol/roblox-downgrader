@@ -28,6 +28,8 @@ jobs:
                   files: roblox-downgrader.exe
                   make_latest: true
                   tag_name: v1.0
+                  body: $(git log --format=%B -n 1 ${{ github.sha }})
+                  append_body: true
 
             - name: Upload release artifact
               uses: actions/upload-artifact@v4
