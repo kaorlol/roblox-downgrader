@@ -27,7 +27,7 @@ jobs:
             - name: Generate release notes
               run: |
                   LAST_RELEASE_TAG=$(git describe --tags --abbrev=0)
-                  echo $(git log $LAST_RELEASE_TAG..${{ github.sha }} --pretty=format:"● %s ~%an") > release-notes.txt
+                  echo $(git log $LAST_RELEASE_TAG..${{ github.sha }} --pretty=format:"● %s%0A") > release-notes.txt
 
             - name: Release
               uses: softprops/action-gh-release@v2
