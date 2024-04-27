@@ -36,7 +36,6 @@ jobs:
                   make_latest: true
                   tag_name: v1.0
                   body_path: release-notes.txt
-                  append_body: true
 
             - name: Upload release artifact
               uses: actions/upload-artifact@v4
