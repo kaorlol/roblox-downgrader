@@ -23,7 +23,9 @@ jobs:
               run: go build -o roblox-downgrader.exe .
 
             - name: Generate release notes
-              run: echo $(git log --format=%B -n 1 ${{ github.sha }}) > release-notes.txt
+              run: |
+                  LAST_RELEASE_TAG=$(git describe --tags --abbrev=0)
+                  echo $(git log --format=%B $LAST_RELEASE_TAG..${{ github.sha }}) > release-notes.txt
 
             - name: Release
               uses: softprops/action-gh-release@v2
