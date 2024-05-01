@@ -3,9 +3,7 @@ name: publish
 on:
     push:
         branches: ["master"]
-        paths-ignore:
-            - "!.github/workflows/*.yml"
-            - "!**/*.go"
+        paths: ["**.go", ".github/workflows/publish.yml"]
 
 jobs:
     build:
