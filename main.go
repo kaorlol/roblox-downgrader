@@ -91,18 +91,18 @@ func main() {
 	latestDir := filepath.Join(userHomeDir, "AppData", "Local", "Roblox", "Versions", latestDeployment.Version)
 	fmt.Println("[+] replacing files in Roblox directory:", latestDir)
 	if err := replaceFiles("out", latestDir); err != nil {
-		println("Make sure Roblox is closed and updated before running again. (Ignore this if you're using Bloxstrap)")
+		println("Error replacing files in 'Roblox directory': Make sure Roblox is closed and updated before running again. (Ignore this if you're using Bloxstrap)")
 	}
 	println("[+] Files replaced in Roblox directory!")
 
 	bloxstrapDir := filepath.Join(userHomeDir, "AppData", "Local", "Bloxstrap", "Versions", latestDeployment.Version)
 	fmt.Println("[+] replacing files to Bloxstrap directory:", bloxstrapDir)
 	if err := replaceFiles("out", bloxstrapDir); err != nil {
-		println("Make sure Roblox & Bloxstrap are closed and updated before running again. (Ignore this if you're not using Bloxstrap)")
+		println("Error replacing files in 'Bloxstrap directory': Make sure Roblox & Bloxstrap are closed and updated before running again. (Ignore this if you're not using Bloxstrap)")
 	}
 	println("[+] Files replaced in Bloxstrap directory!")
 
-	fmt.Println("[+] Done!")
+	println("[+] Done!")
 }
 
 func replaceFiles(source, destination string) error {
@@ -215,7 +215,7 @@ func downloadAndExtractPackages(oldVersion string) error {
 	}
 
 	wg.Wait()
-	fmt.Println("[+] Replacing files...")
+	println("[+] Replacing files...")
 	return nil
 }
 
