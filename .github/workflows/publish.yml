@@ -1,51 +1,56 @@
 name: publish
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    push:
+        branches: ["master"]
+    pull_request:
+        branches: ["master"]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        go-version: [ '1.22.x' ]
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                go-version: ["1.22.x"]
 
-    steps:
-    - uses: actions/checkout@v4
-      with:
-          fetch-depth: 0
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
 
-    - name: Setup Go ${{ matrix.go-version }}
-      uses: actions/setup-go@v5
-      with:
-        go-version: ${{ matrix.go-version }}
+            - name: Setup Go ${{ matrix.go-version }}
+              uses: actions/setup-go@v5
+              with:
+                  go-version: ${{ matrix.go-version }}
 
-    - name: Install dependencies
-      run: go get .
+            - name: Install dependencies
+              run: go get .
 
-    - name: Build
-      run: |
-        go build -v ./...
-        ls -l
+            - name: Build for Windows 64-bit
+              run: GOOS=windows GOARCH=amd64 go build -v -o roblox-downgrader-win64.exe ./...
 
-    - name: Generate release notes
-      run: |
-          LAST_RELEASE_TAG=$(git describe --tags --abbrev=0)
-          git log $LAST_RELEASE_TAG..${{ github.sha }} --pretty=format:"- %s" > release-notes.txt
+            - name: Build for Windows 32-bit
+              run: GOOS=windows GOARCH=386 go build -v -o roblox-downgrader-win32.exe ./...
 
-    - name: Release
-      uses: softprops/action-gh-release@v2
-      with:
-          files: roblox-downgrader
-          make_latest: true
-          tag_name: v1.1
-          body_path: release-notes.txt
+            - name: Generate release notes
+              run: |
+                  LAST_RELEASE_TAG=$(git describe --tags --abbrev=0)
+                  git log $LAST_RELEASE_TAG..${{ github.sha }} --pretty=format:"- %s" > release-notes.txt
 
-    - name: Upload release artifact
-      uses: actions/upload-artifact@v4
-      with:
-          name: roblox-downgrader
-          path: roblox-downgrader
+            - name: Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  files: |
+                      roblox-downgrader-win64.exe
+                      roblox-downgrader-win32.exe
+                  make_latest: true
+                  tag_name: v1.1
+                  body_path: release-notes.txt
+
+            - name: Upload release artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: roblox-downgrader-artifacts
+                  path: |
+                      roblox-downgrader-win64.exe
+                      roblox-downgrader-win32.exe
