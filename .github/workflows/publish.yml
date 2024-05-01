@@ -7,7 +7,6 @@ on:
     branches: [ "master" ]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
@@ -21,7 +20,9 @@ jobs:
         go-version: '1.22.2'
 
     - name: Build
-      run: go build -v ./...
+      run: |
+        go build -v ./...
+        ls -l
 
     - name: Generate release notes
       run: |
@@ -31,7 +32,7 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
-          files: roblox-downgrader.exe
+          files: roblox-downgrader
           make_latest: true
           tag_name: v1.1
           body_path: release-notes.txt
@@ -40,4 +41,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
           name: roblox-downgrader
-          path: roblox-downgrader.exe
+          path: roblox-downgrader
