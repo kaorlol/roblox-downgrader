@@ -43,7 +43,7 @@ jobs:
                       roblox-downgrader-win64.exe
                       roblox-downgrader-win32.exe
                   make_latest: true
-                  tag_name: v1.1
+                  tag_name: v1.2
                   body_path: release-notes.txt
 
             - name: Upload release artifact
