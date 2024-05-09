@@ -78,8 +78,6 @@ func main() {
 		version, _ := reader.ReadString('\n')
 		version = strings.TrimSpace(version)
 
-		oldDeployment = Deployment{Version: version}
-
 		if err := downloadAndExtractPackages(version); err != nil {
 			fmt.Println("Error downloading and extracting packages:", err)
 			return
