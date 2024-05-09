@@ -45,20 +45,47 @@ type Deployment struct {
 }
 
 func main() {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println("Choose an option:")
+	fmt.Println("1. Automatic version detection")
+	fmt.Println("2. Manual version input")
+	fmt.Print("Enter the number of your choice: ")
+
+	input, _ := reader.ReadString('\n')
+	input = strings.TrimSpace(input)
+
 	deployments, err := fetchDeployments("https://setup.rbxcdn.com/DeployHistory.txt")
 	if err != nil {
 		fmt.Println("Error getting deployment history:", err)
 		return
 	}
 
-	oldDeployment, latestDeployment := deployments[len(deployments)-2], deployments[len(deployments)-1]
+	latestDeployment, oldDeployment := deployments[len(deployments)-1], Deployment{}
+	switch input {
+	case "1":
+		oldDeployment = deployments[len(deployments)-2]
 
-	fmt.Println("Old deployment for WindowsPlayer:", oldDeployment)
-	fmt.Println("Latest deployment for WindowsPlayer:", latestDeployment)
+		fmt.Println("Old deployment for WindowsPlayer:", oldDeployment)
+		fmt.Println("Latest deployment for WindowsPlayer:", latestDeployment)
 
-	if err := downloadAndExtractPackages(oldDeployment.Version); err != nil {
-		fmt.Println("Error downloading and extracting packages:", err)
-		return
+		if err := downloadAndExtractPackages(oldDeployment.Version); err != nil {
+			fmt.Println("Error downloading and extracting packages:", err)
+			return
+		}
+	case "2":
+		fmt.Print("Enter the version manually (must include the 'version-' in front): ")
+
+		version, _ := reader.ReadString('\n')
+		version = strings.TrimSpace(version)
+
+		oldDeployment = Deployment{Version: version}
+
+		if err := downloadAndExtractPackages(version); err != nil {
+			fmt.Println("Error downloading and extracting packages:", err)
+			return
+		}
+	default:
+		panic("Invalid option")
 	}
 
 	file, err := os.Create("out/AppSettings.xml")
